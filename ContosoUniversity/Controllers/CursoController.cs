@@ -10,22 +10,22 @@ using ContosoUniversity.Models;
 
 namespace ContosoUniversity.Controllers
 {
-    public class EstudiantesController : Controller
+    public class CursoController : Controller
     {
         private readonly EscuelaContext _context;
 
-        public EstudiantesController(EscuelaContext context)
+        public CursoController(EscuelaContext context)
         {
             _context = context;
         }
 
-        // GET: Estudiantes
+        // GET: Curso
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Estudiantes.ToListAsync());
+            return View(await _context.Cursos.ToListAsync());
         }
 
-        // GET: Estudiantes/Details/5
+        // GET: Curso/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,39 @@ namespace ContosoUniversity.Controllers
                 return NotFound();
             }
 
-            var estudiante = await _context.Estudiantes
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (estudiante == null)
+            var curso = await _context.Cursos
+                .FirstOrDefaultAsync(m => m.CursoID == id);
+            if (curso == null)
             {
                 return NotFound();
             }
 
-            return View(estudiante);
+            return View(curso);
         }
 
-        // GET: Estudiantes/Create
+        // GET: Curso/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Estudiantes/Create
+        // POST: Curso/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Apellido,Nombre,FechaInscripcion")] Estudiante estudiante)
+        public async Task<IActionResult> Create([Bind("CursoID,Titulo,Creditos")] Curso curso)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(estudiante);
+                _context.Add(curso);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(estudiante);
+            return View(curso);
         }
 
-        // GET: Estudiantes/Edit/5
+        // GET: Curso/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +73,22 @@ namespace ContosoUniversity.Controllers
                 return NotFound();
             }
 
-            var estudiante = await _context.Estudiantes.FindAsync(id);
-            if (estudiante == null)
+            var curso = await _context.Cursos.FindAsync(id);
+            if (curso == null)
             {
                 return NotFound();
             }
-            return View(estudiante);
+            return View(curso);
         }
 
-        // POST: Estudiantes/Edit/5
+        // POST: Curso/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Apellido,Nombre,FechaInscripcion")] Estudiante estudiante)
+        public async Task<IActionResult> Edit(int id, [Bind("CursoID,Titulo,Creditos")] Curso curso)
         {
-            if (id != estudiante.ID)
+            if (id != curso.CursoID)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace ContosoUniversity.Controllers
             {
                 try
                 {
-                    _context.Update(estudiante);
+                    _context.Update(curso);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EstudianteExists(estudiante.ID))
+                    if (!CursoExists(curso.CursoID))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace ContosoUniversity.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(estudiante);
+            return View(curso);
         }
 
-        // GET: Estudiantes/Delete/5
+        // GET: Curso/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,30 +124,30 @@ namespace ContosoUniversity.Controllers
                 return NotFound();
             }
 
-            var estudiante = await _context.Estudiantes
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (estudiante == null)
+            var curso = await _context.Cursos
+                .FirstOrDefaultAsync(m => m.CursoID == id);
+            if (curso == null)
             {
                 return NotFound();
             }
 
-            return View(estudiante);
+            return View(curso);
         }
 
-        // POST: Estudiantes/Delete/5
+        // POST: Curso/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var estudiante = await _context.Estudiantes.FindAsync(id);
-            _context.Estudiantes.Remove(estudiante);
+            var curso = await _context.Cursos.FindAsync(id);
+            _context.Cursos.Remove(curso);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EstudianteExists(int id)
+        private bool CursoExists(int id)
         {
-            return _context.Estudiantes.Any(e => e.ID == id);
+            return _context.Cursos.Any(e => e.CursoID == id);
         }
     }
 }

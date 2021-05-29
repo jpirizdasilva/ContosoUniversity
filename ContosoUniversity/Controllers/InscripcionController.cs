@@ -10,23 +10,23 @@ using ContosoUniversity.Models;
 
 namespace ContosoUniversity.Controllers
 {
-    public class InscripcionsController : Controller
+    public class InscripcionController : Controller
     {
         private readonly EscuelaContext _context;
 
-        public InscripcionsController(EscuelaContext context)
+        public InscripcionController(EscuelaContext context)
         {
             _context = context;
         }
 
-        // GET: Inscripcions
+        // GET: Inscripcion
         public async Task<IActionResult> Index()
         {
-            var escuelaContext = _context.Inscripciones.Include(i => i.Course).Include(i => i.Estudiante);
+            var escuelaContext = _context.Inscripciones.Include(i => i.Curso).Include(i => i.Estudiante);
             return View(await escuelaContext.ToListAsync());
         }
 
-        // GET: Inscripcions/Details/5
+        // GET: Inscripcion/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,7 +35,7 @@ namespace ContosoUniversity.Controllers
             }
 
             var inscripcion = await _context.Inscripciones
-                .Include(i => i.Course)
+                .Include(i => i.Curso)
                 .Include(i => i.Estudiante)
                 .FirstOrDefaultAsync(m => m.InscripcionID == id);
             if (inscripcion == null)
@@ -46,7 +46,7 @@ namespace ContosoUniversity.Controllers
             return View(inscripcion);
         }
 
-        // GET: Inscripcions/Create
+        // GET: Inscripcion/Create
         public IActionResult Create()
         {
             ViewData["CursoID"] = new SelectList(_context.Cursos, "CursoID", "CursoID");
@@ -54,7 +54,7 @@ namespace ContosoUniversity.Controllers
             return View();
         }
 
-        // POST: Inscripcions/Create
+        // POST: Inscripcion/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -72,7 +72,7 @@ namespace ContosoUniversity.Controllers
             return View(inscripcion);
         }
 
-        // GET: Inscripcions/Edit/5
+        // GET: Inscripcion/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -90,7 +90,7 @@ namespace ContosoUniversity.Controllers
             return View(inscripcion);
         }
 
-        // POST: Inscripcions/Edit/5
+        // POST: Inscripcion/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -127,7 +127,7 @@ namespace ContosoUniversity.Controllers
             return View(inscripcion);
         }
 
-        // GET: Inscripcions/Delete/5
+        // GET: Inscripcion/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -136,7 +136,7 @@ namespace ContosoUniversity.Controllers
             }
 
             var inscripcion = await _context.Inscripciones
-                .Include(i => i.Course)
+                .Include(i => i.Curso)
                 .Include(i => i.Estudiante)
                 .FirstOrDefaultAsync(m => m.InscripcionID == id);
             if (inscripcion == null)
@@ -147,7 +147,7 @@ namespace ContosoUniversity.Controllers
             return View(inscripcion);
         }
 
-        // POST: Inscripcions/Delete/5
+        // POST: Inscripcion/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

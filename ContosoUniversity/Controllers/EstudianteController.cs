@@ -93,6 +93,36 @@ namespace ContosoUniversity.Controllers
             return View(estudiante);
         }
 
+        [HttpPost, ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditPost(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var studentToUpdate = await _context.Estudiantes.FirstOrDefaultAsync(s => s.ID == id);
+            if (await TryUpdateModelAsync<Estudiante>(
+                studentToUpdate,
+                "",
+                s => s.Nombre, s => s.Apellido, s => s.Inscripciones))
+            {
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException /* ex */)
+                {
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
+                }
+            }
+            return View(studentToUpdate);
+        }
+
         // POST: Estudiante/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.

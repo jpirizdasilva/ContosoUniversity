@@ -93,9 +93,9 @@ namespace ContosoUniversity.Controllers
             return View(estudiante);
         }
 
-        [HttpPost, ActionName("Edit")]
+        /*  [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(int? id)
+      public async Task<IActionResult> EditPost(int? id)
         {
             if (id == null)
             {
@@ -112,8 +112,8 @@ namespace ContosoUniversity.Controllers
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateException /* ex */)
-                {
+                catch (DbUpdateException /* ex */ /*)
+               {
                     //Log the error (uncomment ex variable name and write a log.)
                     ModelState.AddModelError("", "Unable to save changes. " +
                         "Try again, and if the problem persists, " +
@@ -121,7 +121,7 @@ namespace ContosoUniversity.Controllers
                 }
             }
             return View(studentToUpdate);
-        }
+        }*/
 
         // POST: Estudiante/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -159,7 +159,7 @@ namespace ContosoUniversity.Controllers
         }
 
         // GET: Estudiante/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, bool? saveChangesError=false)
         {
             if (id == null)
             {
@@ -167,10 +167,18 @@ namespace ContosoUniversity.Controllers
             }
 
             var estudiante = await _context.Estudiantes
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (estudiante == null)
             {
                 return NotFound();
+            }
+
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewData["MensajeDeError"] =
+                    "Eliminar falló. Prueba nuevamente y si el problema continúa " +
+                    "consulta con el administrador de sistemas.";
             }
 
             return View(estudiante);
@@ -182,9 +190,22 @@ namespace ContosoUniversity.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var estudiante = await _context.Estudiantes.FindAsync(id);
-            _context.Estudiantes.Remove(estudiante);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            if(estudiante == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            try
+            {
+                _context.Estudiantes.Remove(estudiante);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException)
+            {
+                return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
+            }
+           
         }
 
         private bool EstudianteExists(int id)

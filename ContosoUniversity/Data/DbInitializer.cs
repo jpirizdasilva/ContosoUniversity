@@ -33,6 +33,53 @@ namespace ContosoUniversity.Data
             }
             context.SaveChanges();
 
+
+
+            var instructores = new Instructor[]
+            {
+                new Instructor { Nombre = "Kim",     Apellido = "Abercrombie",
+                    FechaContratacion = DateTime.Parse("1995-03-11") },
+                new Instructor { Nombre = "Fadi",    Apellido = "Fakhouri",
+                    FechaContratacion = DateTime.Parse("2002-07-06") },
+                new Instructor { Nombre = "Roger",   Apellido = "Harui",
+                    FechaContratacion = DateTime.Parse("1998-07-01") },
+                new Instructor { Nombre = "Candace", Apellido = "Kapoor",
+                    FechaContratacion = DateTime.Parse("2001-01-15") },
+                new Instructor { Nombre = "Roger",   Apellido = "Zheng",
+                    FechaContratacion = DateTime.Parse("2004-02-12") }
+            };
+
+            foreach (Instructor i in instructores)
+            {
+                context.Instructores.Add(i);
+            }
+            context.SaveChanges();
+
+
+            var departments = new Departamento[]
+           {
+                new Departamento { Nombre = "English",     Presupuesto = 350000,
+                    FechaInicio = DateTime.Parse("2007-09-01"),
+                    InstructorID  = instructores.Single( i => i.Apellido == "Abercrombie").ID },
+                new Departamento { Nombre = "Mathematics", Presupuesto = 100000,
+                    FechaInicio = DateTime.Parse("2007-09-01"),
+                    InstructorID  = instructores.Single( i => i.Apellido == "Fakhouri").ID },
+                new Departamento { Nombre = "Engineering", Presupuesto = 350000,
+                    FechaInicio = DateTime.Parse("2007-09-01"),
+                    InstructorID  = instructores.Single( i => i.Apellido == "Harui").ID },
+                new Departamento { Nombre = "Economics",   Presupuesto = 100000,
+                    FechaInicio = DateTime.Parse("2007-09-01"),
+                    InstructorID  = instructores.Single( i => i.Apellido == "Kapoor").ID }
+           };
+
+            foreach (Departamento d in departments)
+            {
+                context.Departamentos.Add(d);
+            }
+            context.SaveChanges();
+
+
+
             var cursos = new Curso[]
             {
             new Curso{CursoID=1050,Titulo="Chemistry",Creditos=3},
@@ -49,24 +96,138 @@ namespace ContosoUniversity.Data
             }
             context.SaveChanges();
 
+
+
+            var oficinasAsignadas = new OficinaAsignada[]
+           {
+                new OficinaAsignada {
+                    InstructorID = instructores.Single( i => i.Apellido == "Fakhouri").ID,
+                    Ubicacion = "Smith 17" },
+                new OficinaAsignada {
+                    InstructorID = instructores.Single( i => i.Apellido == "Harui").ID,
+                    Ubicacion = "Gowan 27" },
+                new OficinaAsignada {
+                    InstructorID = instructores.Single( i => i.Apellido == "Kapoor").ID,
+                    Ubicacion = "Thompson 304" },
+           };
+
+            foreach (OficinaAsignada o in oficinasAsignadas)
+            {
+                context.OficinasAsignadas.Add(o);
+            }
+            context.SaveChanges();
+
+
+            var CursoInstructores = new CursoAsignado[]
+           {
+                new CursoAsignado {
+                    CursoID = cursos.Single(c => c.Titulo == "Chemistry" ).CursoID,
+                    InstructorID = instructores.Single(i => i.Apellido == "Kapoor").ID
+                    },
+                new CursoAsignado {
+                    CursoID = cursos.Single(c => c.Titulo == "Chemistry" ).CursoID,
+                    InstructorID = instructores.Single(i => i.Apellido == "Harui").ID
+                    },
+                new CursoAsignado {
+                    CursoID = cursos.Single(c => c.Titulo == "Microeconomics" ).CursoID,
+                    InstructorID = instructores.Single(i => i.Apellido == "Zheng").ID
+                    },
+                new CursoAsignado {
+                    CursoID = cursos.Single(c => c.Titulo == "Macroeconomics" ).CursoID,
+                    InstructorID = instructores.Single(i => i.Apellido == "Zheng").ID
+                    },
+                new CursoAsignado {
+                    CursoID = cursos.Single(c => c.Titulo == "Calculus" ).CursoID,
+                    InstructorID = instructores.Single(i => i.Apellido == "Fakhouri").ID
+                    },
+                new CursoAsignado {
+                    CursoID = cursos.Single(c => c.Titulo == "Trigonometry" ).CursoID,
+                    InstructorID = instructores.Single(i => i.Apellido == "Harui").ID
+                    },
+                new CursoAsignado {
+                    CursoID = cursos.Single(c => c.Titulo == "Composition" ).CursoID,
+                    InstructorID = instructores.Single(i => i.Apellido == "Abercrombie").ID
+                    },
+                new CursoAsignado {
+                    CursoID = cursos.Single(c => c.Titulo == "Literature" ).CursoID,
+                    InstructorID = instructores.Single(i => i.Apellido == "Abercrombie").ID
+                    },
+           };
+
+            foreach (CursoAsignado ci in CursoInstructores)
+            {
+                context.CursosAsignados.Add(ci);
+            }
+            context.SaveChanges();
+
+
             var inscripciones = new Inscripcion[]
             {
-            new Inscripcion{EstudianteID=1,CursoID=1050,Calificacion=Calificacion.diez},
-            new Inscripcion{EstudianteID=1,CursoID=4022,Calificacion=Calificacion.siete},
-            new Inscripcion{EstudianteID=1,CursoID=4041,Calificacion=Calificacion.nueve},
-            new Inscripcion{EstudianteID=2,CursoID=1045,Calificacion=Calificacion.nueve},
-            new Inscripcion{EstudianteID=2,CursoID=3141,Calificacion=Calificacion.cuatro},
-            new Inscripcion{EstudianteID=2,CursoID=2021,Calificacion=Calificacion.seis},
-            new Inscripcion{EstudianteID=3,CursoID=1050},
-            new Inscripcion{EstudianteID=4,CursoID=1050},
-            new Inscripcion{EstudianteID=4,CursoID=4022,Calificacion=Calificacion.cuatro},
-            new Inscripcion{EstudianteID=5,CursoID=4041,Calificacion=Calificacion.siete},
-            new Inscripcion{EstudianteID=6,CursoID=1045},
-            new Inscripcion{EstudianteID=7,CursoID=3141,Calificacion=Calificacion.diez},
+                    new Inscripcion {
+                    EstudianteID = estudiantes.Single(s => s.Apellido == "Alexander").ID,
+                    CursoID = cursos.Single(c => c.Titulo == "Chemistry" ).CursoID,
+                    Calificacion = Calificacion.diez
+                    },
+                    new Inscripcion {
+                    EstudianteID = estudiantes.Single(s => s.Apellido == "Alexander").ID,
+                    CursoID = cursos.Single(c => c.Titulo == "Microeconomics" ).CursoID,
+                    Calificacion = Calificacion.siete
+                    },
+                    new Inscripcion {
+                    EstudianteID = estudiantes.Single(s => s.Apellido == "Alexander").ID,
+                    CursoID = cursos.Single(c => c.Titulo == "Macroeconomics" ).CursoID,
+                    Calificacion = Calificacion.nueve
+                    },
+                    new Inscripcion {
+                        EstudianteID = estudiantes.Single(s => s.Apellido == "Alonso").ID,
+                    CursoID = cursos.Single(c => c.Titulo == "Calculus" ).CursoID,
+                    Calificacion = Calificacion.nueve
+                    },
+                    new Inscripcion {
+                        EstudianteID = estudiantes.Single(s => s.Apellido == "Alonso").ID,
+                    CursoID = cursos.Single(c => c.Titulo == "Trigonometry" ).CursoID,
+                    Calificacion = Calificacion.ocho
+                    },
+                    new Inscripcion {
+                    EstudianteID = estudiantes.Single(s => s.Apellido == "Alonso").ID,
+                    CursoID = cursos.Single(c => c.Titulo == "Composition" ).CursoID,
+                    Calificacion = Calificacion.nueve
+                    },
+                    new Inscripcion {
+                    EstudianteID = estudiantes.Single(s => s.Apellido == "Anand").ID,
+                    CursoID = cursos.Single(c => c.Titulo == "Chemistry" ).CursoID
+                    },
+                    new Inscripcion {
+                    EstudianteID = estudiantes.Single(s => s.Apellido == "Anand").ID,
+                    CursoID = cursos.Single(c => c.Titulo == "Microeconomics").CursoID,
+                    Calificacion = Calificacion.siete
+                    },
+                    new Inscripcion {
+                    EstudianteID = estudiantes.Single(s => s.Apellido == "Barzdukas").ID,
+                    CursoID = cursos.Single(c => c.Titulo == "Chemistry").CursoID,
+                    Calificacion = Calificacion.seis
+                    },
+                    new Inscripcion {
+                    EstudianteID = estudiantes.Single(s => s.Apellido == "Li").ID,
+                    CursoID = cursos.Single(c => c.Titulo == "Composition").CursoID,
+                    Calificacion = Calificacion.nueve
+                    },
+                    new Inscripcion {
+                    EstudianteID = estudiantes.Single(s => s.Apellido == "Justice").ID,
+                    CursoID = cursos.Single(c => c.Titulo == "Literature").CursoID,
+                    Calificacion = Calificacion.cinco
+                    }
             };
             foreach (Inscripcion e in inscripciones)
             {
-                context.Inscripciones.Add(e);
+                var inscripcionEnBaseDeDatos = context.Inscripciones.Where(
+                    s =>
+                            s.Estudiante.ID == e.EstudianteID &&
+                            s.Curso.CursoID == e.CursoID).SingleOrDefault();
+                if (inscripcionEnBaseDeDatos == null)
+                {
+                    context.Inscripciones.Add(e);
+                }
             }
             context.SaveChanges();
         }

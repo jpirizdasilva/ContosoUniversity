@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,6 +16,8 @@ namespace ContosoUniversity.Models
         public int InscripcionID { get; set; }//EnrollmentID
         public int CursoID { get; set; }
         public int EstudianteID { get; set; }
+
+        [DisplayFormat(NullDisplayText = "Sin Calificación")]     
         public Calificacion? Calificacion { get; set; }
 
         public Curso Curso { get; set; }

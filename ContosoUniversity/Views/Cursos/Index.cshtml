@@ -1,20 +1,17 @@
 ﻿@model IEnumerable<ContosoUniversity.Models.Curso>
 
 @{
-    ViewData["Title"] = "Cursos";
+    ViewData["Title"] = "Index";
 }
 
-<h1>Cursos</h1>
+<h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Crear nuevo</a>
+    <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CursoID)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Titulo)
             </th>
@@ -31,16 +28,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CursoID)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Titulo)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Creditos)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Departamento.Nombre)
+                @Html.DisplayFor(modelItem => item.Departamento.DepartamentoID)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CursoID">Edit</a> |

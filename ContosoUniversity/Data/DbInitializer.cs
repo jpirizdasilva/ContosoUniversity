@@ -56,7 +56,7 @@ namespace ContosoUniversity.Data
             context.SaveChanges();
 
 
-            var departments = new Departamento[]
+            var departamentos = new Departamento[]
            {
                 new Departamento { Nombre = "English",     Presupuesto = 350000,
                     FechaInicio = DateTime.Parse("2007-09-01"),
@@ -72,7 +72,7 @@ namespace ContosoUniversity.Data
                     InstructorID  = instructores.Single( i => i.Apellido == "Kapoor").ID }
            };
 
-            foreach (Departamento d in departments)
+            foreach (Departamento d in departamentos)
             {
                 context.Departamentos.Add(d);
             }
@@ -82,13 +82,27 @@ namespace ContosoUniversity.Data
 
             var cursos = new Curso[]
             {
-            new Curso{CursoID=1050,Titulo="Chemistry",Creditos=3},
-            new Curso{CursoID=4022,Titulo="Microeconomics",Creditos=3},
-            new Curso{CursoID=4041,Titulo="Macroeconomics",Creditos=3},
-            new Curso{CursoID=1045,Titulo="Calculus",Creditos=4},
-            new Curso{CursoID=3141,Titulo="Trigonometry",Creditos=4},
-            new Curso{CursoID=2021,Titulo="Composition",Creditos=3},
-            new Curso{CursoID=2042,Titulo="Literature",Creditos=4}
+                new Curso {CursoID = 1050, Titulo = "Chemistry",      Creditos = 3,
+                    DepartamentoID = departamentos.Single( s => s.Nombre == "Engineering").DepartamentoID
+                },
+                new Curso {CursoID = 4022, Titulo = "Microeconomics", Creditos = 3,
+                    DepartamentoID = departamentos.Single( s => s.Nombre == "Economics").DepartamentoID
+                },
+                new Curso {CursoID = 4041, Titulo = "Macroeconomics", Creditos = 3,
+                    DepartamentoID = departamentos.Single( s => s.Nombre == "Economics").DepartamentoID
+                },
+                new Curso {CursoID = 1045, Titulo = "Calculus",       Creditos = 4,
+                    DepartamentoID = departamentos.Single( s => s.Nombre == "Mathematics").DepartamentoID
+                },
+                new Curso {CursoID = 3141, Titulo = "Trigonometry",   Creditos = 4,
+                    DepartamentoID = departamentos.Single( s => s.Nombre == "Mathematics").DepartamentoID
+                },
+                new Curso {CursoID = 2021, Titulo = "Composition",    Creditos = 3,
+                    DepartamentoID = departamentos.Single( s => s.Nombre == "English").DepartamentoID
+                },
+                new Curso {CursoID = 2042, Titulo = "Literature",     Creditos = 4,
+                    DepartamentoID = departamentos.Single( s => s.Nombre == "English").DepartamentoID
+                },
             };
             foreach (Curso c in cursos)
             {

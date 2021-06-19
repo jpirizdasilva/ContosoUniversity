@@ -19,13 +19,14 @@ namespace ContosoUniversity.Controllers
             _context = context;
         }
 
-        // GET: Curso
+        // GET: Cursos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Cursos.ToListAsync());
+            var cursos = _context.Cursos.Include(c => c.Departamento);
+            return View(await cursos.ToListAsync());
         }
 
-        // GET: Curso/Details/5
+        // GET: Cursos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,6 +35,7 @@ namespace ContosoUniversity.Controllers
             }
 
             var curso = await _context.Cursos
+                .Include(c => c.Departamento)
                 .FirstOrDefaultAsync(m => m.CursoID == id);
             if (curso == null)
             {
@@ -43,18 +45,19 @@ namespace ContosoUniversity.Controllers
             return View(curso);
         }
 
-        // GET: Curso/Create
+        // GET: Cursos/Create
         public IActionResult Create()
         {
+            ViewData["DepartamentoID"] = new SelectList(_context.Departamentos, "DepartamentoID", "DepartamentoID");
             return View();
         }
 
-        // POST: Curso/Create
+        // POST: Cursos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CursoID,Titulo,Creditos")] Curso curso)
+        public async Task<IActionResult> Create([Bind("CursoID,Titulo,Creditos,DepartamentoID")] Curso curso)
         {
             if (ModelState.IsValid)
             {
@@ -62,10 +65,11 @@ namespace ContosoUniversity.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["DepartamentoID"] = new SelectList(_context.Departamentos, "DepartamentoID", "DepartamentoID", curso.DepartamentoID);
             return View(curso);
         }
 
-        // GET: Curso/Edit/5
+        // GET: Cursos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -78,15 +82,16 @@ namespace ContosoUniversity.Controllers
             {
                 return NotFound();
             }
+            ViewData["DepartamentoID"] = new SelectList(_context.Departamentos, "DepartamentoID", "DepartamentoID", curso.DepartamentoID);
             return View(curso);
         }
 
-        // POST: Curso/Edit/5
+        // POST: Cursos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CursoID,Titulo,Creditos")] Curso curso)
+        public async Task<IActionResult> Edit(int id, [Bind("CursoID,Titulo,Creditos,DepartamentoID")] Curso curso)
         {
             if (id != curso.CursoID)
             {
@@ -113,10 +118,11 @@ namespace ContosoUniversity.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["DepartamentoID"] = new SelectList(_context.Departamentos, "DepartamentoID", "DepartamentoID", curso.DepartamentoID);
             return View(curso);
         }
 
-        // GET: Curso/Delete/5
+        // GET: Cursos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,6 +131,7 @@ namespace ContosoUniversity.Controllers
             }
 
             var curso = await _context.Cursos
+                .Include(c => c.Departamento)
                 .FirstOrDefaultAsync(m => m.CursoID == id);
             if (curso == null)
             {
@@ -134,7 +141,7 @@ namespace ContosoUniversity.Controllers
             return View(curso);
         }
 
-        // POST: Curso/Delete/5
+        // POST: Cursos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

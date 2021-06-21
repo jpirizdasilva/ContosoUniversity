@@ -103,7 +103,12 @@ namespace ContosoUniversity.Controllers
                 return NotFound();
             }
 
-            var instructor = await _context.Instructores.FindAsync(id);
+            var instructor = await _context.Instructores
+               .Include(i => i.OficinaAsignada)
+               .AsNoTracking()
+               .FirstOrDefaultAsync(m => m.ID == id);
+
+          
             if (instructor == null)
             {
                 return NotFound();
@@ -111,39 +116,42 @@ namespace ContosoUniversity.Controllers
             return View(instructor);
         }
 
-        // POST: Instructor/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Apellido,Nombre,FechaContratacion")] Instructor instructor)
+        public async Task<IActionResult> EditPost(int? id)
         {
-            if (id != instructor.ID)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var instructorAActualizar = await _context.Instructores
+                .Include(i => i.OficinaAsignada)
+                .FirstOrDefaultAsync(s => s.ID == id);
+
+            if (await TryUpdateModelAsync<Instructor>(
+                instructorAActualizar,
+                "",
+                i => i.Nombre, i => i.Apellido, i => i.FechaContratacion, i => i.OficinaAsignada))
             {
+                if (String.IsNullOrWhiteSpace(instructorAActualizar.OficinaAsignada?.Ubicacion))
+                {
+                    instructorAActualizar.OficinaAsignada = null;
+                }
                 try
                 {
-                    _context.Update(instructor);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!InstructorExists(instructor.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(instructor);
+            return View(instructorAActualizar);
         }
 
         // GET: Instructor/Delete/5

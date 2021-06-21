@@ -36,6 +36,7 @@ namespace ContosoUniversity.Controllers
 
             var curso = await _context.Cursos
                 .Include(c => c.Departamento)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.CursoID == id);
             if (curso == null)
             {
@@ -138,6 +139,7 @@ namespace ContosoUniversity.Controllers
 
             var curso = await _context.Cursos
                 .Include(c => c.Departamento)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.CursoID == id);
             if (curso == null)
             {

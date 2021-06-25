@@ -76,6 +76,10 @@ namespace ContosoUniversity.Controllers
         // GET: Instructor/Create
         public IActionResult Create()
         {
+            var instructor = new Instructor();
+            instructor.CursosAsignados = new List<CursoAsignado>();
+            PopulateAssignedCourseData(instructor);
+
             return View();
         }
 
@@ -84,14 +88,25 @@ namespace ContosoUniversity.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Apellido,Nombre,FechaContratacion")] Instructor instructor)
+        public async Task<IActionResult> Create([Bind("OficinaAsignada,Apellido,Nombre,FechaContratacion")] Instructor instructor, string[] cursosSeleccionados)
         {
+            if (cursosSeleccionados != null)
+            {
+                instructor.CursosAsignados = new List<CursoAsignado>();
+                foreach (var curso in cursosSeleccionados)
+                {
+                    var cursoAAgregar = new CursoAsignado { InstructorID = instructor.ID, CursoID = int.Parse(curso) };
+                    instructor.CursosAsignados.Add(cursoAAgregar);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(instructor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            PopulateAssignedCourseData(instructor);
             return View(instructor);
         }
 
@@ -119,7 +134,7 @@ namespace ContosoUniversity.Controllers
         private void PopulateAssignedCourseData(Instructor instructor)
         {
             var cursosTodos = _context.Cursos;
-            var instructorCursos = new HashSet<int>(instructor.CursosAsignados.Select(c => c.CursoID));
+            var cursosInstructor = new HashSet<int>(instructor.CursosAsignados.Select(c => c.CursoID));
             var viewModel = new List<DatosCursosAsignados>();
             foreach (var curso in cursosTodos)
             {
@@ -127,7 +142,7 @@ namespace ContosoUniversity.Controllers
                 {
                     CursoID = curso.CursoID,
                     Titulo = curso.Titulo,
-                    Asignado = instructorCursos.Contains(curso.CursoID)
+                    Asignado = cursosInstructor.Contains(curso.CursoID)
                 });
             }
             ViewData["Cursos"] = viewModel;
@@ -185,7 +200,7 @@ namespace ContosoUniversity.Controllers
             var cursosSeleccionadosHS = new HashSet<string>(cursosSeleccionados);
             var instructorCursos = new HashSet<int>
                 (instructorAActualizar.CursosAsignados.Select(c => c.Curso.CursoID));
-          
+
             foreach (var curso in _context.Cursos)
             {
                 if (cursosSeleccionadosHS.Contains(curso.CursoID.ToString()))
@@ -230,7 +245,15 @@ namespace ContosoUniversity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var instructor = await _context.Instructores.FindAsync(id);
+            //var instructor = await _context.Instructores.FindAsync(id);
+            Instructor instructor = await _context.Instructores
+                .Include(i => i.CursosAsignados)
+                .SingleAsync(i => i.ID == id);
+
+            var departments = await _context.Departamentos
+                .Where(d => d.InstructorID == id)
+                .ToListAsync();
+            departments.ForEach(d => d.InstructorID = null);
             _context.Instructores.Remove(instructor);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

@@ -24,7 +24,7 @@ namespace ContosoUniversity.Models
         public DateTime FechaContratacion { get; set; } //HireDate
 
         [Display(Name = "Nombre Completo")]
-        public string FullName
+        public string NombreCompleto
         {
             get { return Nombre + Apellido; }
         }

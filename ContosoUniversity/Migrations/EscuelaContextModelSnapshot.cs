@@ -76,11 +76,6 @@ namespace ContosoUniversity.Migrations
                     b.Property<decimal>("Presupuesto")
                         .HasColumnType("money");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
                     b.HasKey("DepartamentoID");
 
                     b.HasIndex("InstructorID");

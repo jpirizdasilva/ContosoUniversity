@@ -23,6 +23,9 @@ namespace ContosoUniversity.Models
 
         public int? InstructorID { get; set; }
 
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
         public Instructor Administrador { get; set; }
         public ICollection<Curso> Cursos { get; set; }
     }
